@@ -63,7 +63,7 @@ const Welcome: React.FunctionComponent = () => {
             Explore the crypto world. Buy and sell cryptocurrencies easily on
             Krypto
           </p>
-          {!currentAccount && (
+          {currentAccount && (
             <button
               type="button"
               onClick={connectWallet}
@@ -106,27 +106,25 @@ const Welcome: React.FunctionComponent = () => {
               placeholder="Address To"
               name="addressTo"
               type="text"
-              handleChange={event =>
-                handleChange(event.target.name, event.target.value)
-              }
+              handleChange={handleChange}
             />
             <Input
               placeholder="Amount (ETH)"
               name="amount"
               type="number"
-              handleChange={}
+              handleChange={handleChange}
             />
             <Input
               placeholder="Keyword (Gif)"
               name="keyword"
               type="text"
-              handleChange={}
+              handleChange={handleChange}
             />
             <Input
               placeholder="Enter Message"
               name="message"
               type="text"
-              handleChange={}
+              handleChange={handleChange}
             />
 
             <div className="h-[1px] w-full bg-gray-400 my-2" />

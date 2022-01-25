@@ -117,6 +117,8 @@ export const TransactionProvider: React.FunctionComponent<TransactionProviderPro
         return alert('Please install MetaMask to continue');
       }
       //get the data from the form
+      const { addressTo, amount, keyword, message } = formData;
+      getEthereumContract();
     } catch (error) {
       console.log('Error', error);
       throw new Error('No Ethereum object found');
