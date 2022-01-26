@@ -24,10 +24,7 @@ export const TransactionContext = React.createContext<{
   currentAccount: string[];
   formData: FormData;
   setFormData: (data: FormData) => void;
-  handleChange: (
-    event: React.ChangeEvent<HTMLInputElement>,
-    name: string
-  ) => void;
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>, name: string) => void;
   sendTransaction: () => void;
 }>({
   connectWallet: async () => {},
@@ -40,7 +37,7 @@ export const TransactionContext = React.createContext<{
 
 const { ethereum } = window;
 
-const getEthereumContract = () => {
+const getEthereumContract = (): ethers.Contract => {
   const provider = new ethers.providers.Web3Provider(ethereum);
   const signer = provider.getSigner();
   const transactionContract = new ethers.Contract(
@@ -49,11 +46,7 @@ const getEthereumContract = () => {
     signer
   );
 
-  console.log({
-    provider,
-    signer,
-    transactionContract,
-  });
+  return transactionContract;
 };
 
 export const TransactionProvider: React.FunctionComponent<TransactionProviderProps> = ({
@@ -69,10 +62,10 @@ export const TransactionProvider: React.FunctionComponent<TransactionProviderPro
   });
 
   const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
+    e: React.ChangeEvent<HTMLInputElement>,
     name: string
-  ): void => {
-    setFormData(prevState => ({ ...prevState, [name]: event.target.value }));
+  ) => {
+    setFormData(prevState => ({ ...prevState, [name]: e.target.value }));
   };
 
   const checkIfWalletIsConnected = async () => {
@@ -112,13 +105,14 @@ export const TransactionProvider: React.FunctionComponent<TransactionProviderPro
   };
 
   const sendTransaction = async () => {
+    console.log('I am here');
     try {
       if (!ethereum) {
         return alert('Please install MetaMask to continue');
       }
       //get the data from the form
       const { addressTo, amount, keyword, message } = formData;
-      getEthereumContract();
+      const transactionContract = getEthereumContract();
     } catch (error) {
       console.log('Error', error);
       throw new Error('No Ethereum object found');

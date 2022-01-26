@@ -11,7 +11,7 @@ interface InputProps {
   name: string;
   type: string;
   value: string;
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>, name: string) => void;
 }
 const commonStyles: string =
   'min-h-[70px] sm:px-0 px-2 sm:min-w-[120px] flex justify-center items-center border-[0.5px] border-gray-400 text-sm font-light text-white';
@@ -28,7 +28,7 @@ const Input = ({
     type={type}
     step={0.0001}
     value={value}
-    onChange={e => handleChange(e)}
+    onChange={e => handleChange(e, name)}
     className="my-2 w-full rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism"
   ></input>
 );
@@ -42,8 +42,8 @@ const Welcome: React.FunctionComponent = () => {
     sendTransaction,
   } = useContext(TransactionContext);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
     const { addressTo, amount, keyword, message } = formData;
 
@@ -63,7 +63,7 @@ const Welcome: React.FunctionComponent = () => {
             Explore the crypto world. Buy and sell cryptocurrencies easily on
             Krypto
           </p>
-          {currentAccount && (
+          {!currentAccount && (
             <button
               type="button"
               onClick={connectWallet}
