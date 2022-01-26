@@ -61,6 +61,11 @@ export const TransactionProvider: React.FunctionComponent<TransactionProviderPro
     message: '',
   });
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [transactionCount, setTransactionCount] = useState<string | null>(
+    localStorage.getItem('transactionCount')
+  );
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     name: string
@@ -110,9 +115,39 @@ export const TransactionProvider: React.FunctionComponent<TransactionProviderPro
       if (!ethereum) {
         return alert('Please install MetaMask to continue');
       }
-      //get the data from the form
+
       const { addressTo, amount, keyword, message } = formData;
       const transactionContract = getEthereumContract();
+      const parsedAmount = ethers.utils.parseEther(amount);
+
+      await ethereum.request?.({
+        method: 'eth_sendTransaction',
+        params: [
+          {
+            from: currentAccount,
+            to: addressTo,
+            gas: '0x5208', // 21000 GWEI
+            value: parsedAmount._hex,
+          },
+        ],
+      });
+
+      const transactionHash = await transactionContract.addToBlockchain(
+        addressTo,
+        amount,
+        message,
+        keyword
+      );
+      setIsLoading(true);
+      console.log(`Loading - ${transactionHash.hash}`);
+
+      await transactionHash.wait();
+
+      setIsLoading(false);
+      console.log(`Success - ${transactionHash.hash}`);
+
+      const transactionCount = await transactionContract.getTransactionCount();
+      setTransactionCount(transactionCount.toNumber());
     } catch (error) {
       console.log('Error', error);
       throw new Error('No Ethereum object found');
