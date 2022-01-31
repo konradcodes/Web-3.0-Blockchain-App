@@ -5,6 +5,7 @@ import { BsInfoCircle } from 'react-icons/bs';
 import { Loader } from './';
 import { ReactElement } from 'react';
 import { TransactionContext } from '../context/TransactionContext';
+import { shortenAddress } from '../utils/shortenAddress';
 
 interface InputProps {
   placeholder: string;
@@ -40,6 +41,7 @@ const Welcome: React.FunctionComponent = () => {
     formData,
     handleChange,
     sendTransaction,
+    isLoading,
   } = useContext(TransactionContext);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -93,7 +95,9 @@ const Welcome: React.FunctionComponent = () => {
                 <BsInfoCircle fontSize={17} color="#fff" />
               </div>
               <div>
-                <p className="text-white font-light text-sm">Address</p>
+                <p className="text-white font-light text-sm">
+                  {shortenAddress(currentAccount)}
+                </p>
                 <p className="text-white font-semibold text-lg mt-1">
                   Ethereum
                 </p>
@@ -129,7 +133,7 @@ const Welcome: React.FunctionComponent = () => {
 
             <div className="h-[1px] w-full bg-gray-400 my-2" />
 
-            {false ? (
+            {isLoading ? (
               <Loader />
             ) : (
               <button
